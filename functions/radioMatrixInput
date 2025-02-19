@@ -1,0 +1,40 @@
+radioMatrixInput <- function(inputId, questions, choices, selected = NULL, .required = FALSE) {
+  # Create a unique ID for each radio button group
+  if(is.null(selected)) selected <- rep(NA, length(questions))
+  
+  # Create the matrix of radio buttons
+  tags$div(
+    class = "radio-matrix",
+    # Header row with choices
+    tags$table(
+      class = "table",
+      tags$thead(
+        tags$tr(
+          tags$th("Questions"),
+          lapply(choices, function(choice) {
+            tags$th(choice)
+          })
+        )
+      ),
+      # Body with questions and radio buttons
+      tags$tbody(
+        lapply(seq_along(questions), function(i) {
+          tags$tr(
+            tags$td(questions[i]),
+            lapply(choices, function(choice) {
+              tags$td(
+                tags$input(
+                  type = "radio",
+                  name = paste0(inputId, "_", i),
+                  value = choice,
+                  if(.required) tags$span(class="required", "*"),
+                  if(!is.na(selected[i]) && selected[i] == choice) list(checked = NA)
+                )
+              )
+            })
+          )
+        })
+      )
+    )
+  )
+}
